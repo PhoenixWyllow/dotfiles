@@ -1,0 +1,124 @@
+# ~/.config/starship.toml
+
+add_newline = false
+command_timeout = 1000
+format = """[╭─](#D60270)\
+[](rootle)$os$username$hostname\
+([](inverted rootle)$kubernetes$docker_context[](inverted rootle))\
+$directory\
+([](inverted bubble)$git_branch$git_status[](inverted bubble))\
+[](bubble)
+[╰─](#D60270) """
+
+# Set custom color palette
+palette = 'binana'
+
+# Define custom colors
+[palettes.binana]
+rootle = '#9B4F96'
+rootlet = 'bright-white'
+bubble = '#0038A8'
+bubblet = 'white'
+
+# Drop ugly default prompt characters
+[character]
+success_symbol = ''
+error_symbol = ''
+
+# ---
+
+[os]
+format = '[$symbol ]($style)'   
+disabled = false
+style = 'bg:rootle fg:rootlet bold'
+
+[os.symbols]
+Windows = ''
+Arch = '󰣇'
+Ubuntu = ''
+Linux = ''
+Macos = '󰀵'
+
+# ---y
+
+# Shows the username
+[username]
+style_user = 'bg:rootle fg:rootlet bold'
+style_root = 'bg:rootle fg:red bold'
+format = '[$user]($style)'
+disabled = false
+show_always = true
+
+# Shows the hostname
+[hostname]
+ssh_only = false
+format = '[@$hostname ]($style)'
+disabled = false
+style = 'bg:rootle fg:rootlet bold'
+
+# Shows current directory
+[directory]
+truncation_length = 0
+truncation_symbol = '…/'
+home_symbol = '󰋜 ~'
+read_only_style = '197'
+read_only = ''
+format = '[ $path[$read_only]($read_only_style) ]($style)'
+style = 'bg:bubble fg:bubblet'
+
+# Shows current git branch
+[git_branch]
+symbol = ''
+format = '[\[ $symbol $branch(:$remote_branch)]($style)'
+# truncation_length = 4
+truncation_symbol = '…/'
+style = 'bold green'
+
+# Shows current git status
+[git_status]
+format = '[ $all_status$ahead_behind\]]($style)'
+style = 'bold green'
+conflicted = '🏳 '
+up_to_date = ''
+untracked = ' '
+ahead = '⇡${count}'
+diverged = '⇕⇡${ahead_count}⇣${behind_count}'
+behind = '⇣${count}'
+stashed = ' '
+modified = ' '
+staged = '[++\($count\)](green)'
+renamed = ' '
+deleted = ' '
+
+# Shows kubernetes context and namespace
+[kubernetes]
+symbol = '󱃾'
+format = '[\[ $symbol $context \($namespace\) \]]($style)'
+disabled = false
+style = 'bold purple'
+
+# ---
+
+[vagrant]
+disabled = true
+
+[docker_context]
+symbol = ''
+format = '[\[ $symbol $context \]]($style)'
+disabled = false
+style = 'blue bold'
+
+[helm]
+disabled = true
+
+[python]
+disabled = true
+
+[nodejs]
+disabled = true
+
+[ruby]
+disabled = true
+
+[terraform]
+disabled = true
