@@ -13,6 +13,6 @@ fi
 #   source /usr/share/zsh/manjaro-zsh-prompt
 # fi
 
-alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+alias dotfiles='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 
 eval "$(starship init zsh)"
