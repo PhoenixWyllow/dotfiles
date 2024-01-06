@@ -1,7 +1,12 @@
-local o = vim.o
-
 -- See `:help vim.o`
--- NOTE: You can change these options as you wish!
+local o = vim.o
+local g = vim.g
+
+-- Set <space> as the leader key
+-- See `:help mapleader`
+--  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
+g.mapleader = ' '
+g.maplocalleader = ' '
 
 -- Set highlight on search
 o.hlsearch = false
@@ -13,8 +18,8 @@ vim.wo.number = true
 o.mouse = 'a'
 
 -- Sync clipboard between OS and Neovim.
---  Remove this option if you want your OS clipboard to remain independent.
---  See `:help 'clipboard'`
+-- Remove this option if you want your OS clipboard to remain independent.
+-- See `:help 'clipboard'`
 o.clipboard = 'unnamedplus'
 
 -- Enable break indent
@@ -39,4 +44,3 @@ o.completeopt = 'menuone,noselect'
 
 -- NOTE: You should make sure your terminal supports this
 o.termguicolors = true
-

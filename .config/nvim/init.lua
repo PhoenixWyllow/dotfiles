@@ -1,16 +1,10 @@
 -- There are `:help X` comments which you should run to read the help section for more information.
 
--- Set <space> as the leader key
--- See `:help mapleader`
---  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
-
 -- [[ Setting options ]]
-require('baseoptions')
+require('core.config')
 
 -- [[ Basic Keymaps ]]
-require('keymaps')
+require('core.keymaps')
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
@@ -43,18 +37,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = highlight_group,
   pattern = '*',
 })
-
--- [[ Configure Telescope ]]
-require('conf_telescope')
-
--- [[ Configure Treesitter ]]
-require('conf_treesitter')
-
--- [[ Configure LSP ]]
-require('conf_lsp')
-
--- [[ Configure nvim-cmp ]]
-require('conf_cmp')
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
