@@ -13,7 +13,7 @@ in Windows use:
 ```
 
 For Windows: The powershell profile I use is stored in onedrive since my documents are mapped there already.
-I use this configuration in my profile to have portability of a `dotfiles` alias and configure neovim to use a conventional xdg path:
+I use this configuration in my profile to have portability of a `dotfiles` alias and configure neovim to use a conventional xdg path (starship does this already):
 
 ```powershell
 function Invoke-GitDotFiles {
@@ -23,4 +23,6 @@ Set-Alias -Name dotfiles -Value Invoke-GitDotFiles
 #endregion
 
 $env:XDG_CONFIG_HOME = "$HOME/.config"
+
+starship init powershell | Invoke-Expression
 ```
