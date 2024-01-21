@@ -5,8 +5,9 @@ return {
   opts = {
     options = {
       icons_enabled = false,
-      theme = 'onedark',
-      -- theme = 'cyberdream',
+      theme = 'catppuccin',
+      -- theme = 'dracula-nvim',
+      -- theme = 'onedark',
       component_separators = '|',
       section_separators = '',
     },

@@ -2,19 +2,20 @@
 
 add_newline = false
 command_timeout = 1000
-format = """[╭─](#D60270)\
+format = """[╭─](descle)\
 [](rootle)$os$username$hostname\
 ([](inverted rootle)$kubernetes$docker_context[](inverted rootle))\
 $directory\
 ([](inverted bubble)$git_branch$git_status[](inverted bubble))\
 [](bubble)
-[╰─](#D60270) """
+[╰─](descle) """
 
 # Set custom color palette
 palette = 'binana'
 
 # Define custom colors
 [palettes.binana]
+descle = '#D60270'
 rootle = '#9B4F96'
 rootlet = 'bright-white'
 bubble = '#0038A8'
@@ -45,7 +46,7 @@ Manjaro = '󱘊'
 # Shows the username
 [username]
 style_user = 'bg:rootle fg:rootlet bold'
-style_root = 'bg:rootle fg:red bold'
+style_root = 'bg:rootle fg:black bold'
 format = '[$user]($style)'
 disabled = false
 show_always = true
@@ -80,7 +81,7 @@ style = 'bold green'
 format = '[ $all_status$ahead_behind\]]($style)'
 style = 'bold green'
 conflicted = '🏳 '
-up_to_date = ''
+up_to_date = ' '
 untracked = ' '
 ahead = '⇡${count}'
 diverged = '⇕⇡${ahead_count}⇣${behind_count}'

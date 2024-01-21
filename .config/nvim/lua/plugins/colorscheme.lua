@@ -1,18 +1,27 @@
 return {
-  -- { "scottmckendry/cyberdream.nvim",
-  --   priority = 1000,
-  --   config = function()
-  --       require("cyberdream").setup({
-  --           -- Recommended - see "Configuring" below for more config options
-  --           transparent = true,
-  --           italic_comments = true,
-  --           hide_fillchars = true,
-  --           borderless_telescope = true,
-  --       })
-  --       vim.cmd.colorscheme 'cyberdream' -- set the colorscheme
-  --   end,
-  -- },
-  {
+  --[[ {
+    'Mofiqul/dracula.nvim',
+    priority = 1000,
+    config = function ()
+      vim.cmd.colorscheme 'dracula'
+    end
+  }, ]]
+  { "catppuccin/nvim",
+    name = "catppuccin",
+    priority = 1000,
+    opts = {
+      integrations = {
+        dashboard = true,
+        mason = true,
+        neotree = true,
+        whichkey = true,
+      }
+    },
+    config = function ()
+      vim.cmd.colorscheme "catppuccin"
+    end
+  },
+  --[[ {
     'navarasu/onedark.nvim',
     priority = 1000,
     opts = {
@@ -22,5 +31,5 @@ return {
     config = function()
       require('onedark').load()
     end,
-  },
+  }, ]]
 }

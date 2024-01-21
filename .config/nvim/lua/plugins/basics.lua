@@ -5,13 +5,14 @@ return {
   'tpope/vim-sleuth',
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim',
+  {
+    'folke/which-key.nvim',
     opts = {},
     cmd = "WhichKey",
     keys = {
-      { '<C-w>','<cmd>WhichKey<CR>',{desc = "[W]hichkey show all keys"} }
+      { '<leader>W>', '<cmd>WhichKey<CR>', { desc = "[W]hichkey show all keys" } }
     },
-    config = function ()
+    config = function()
       -- document existing key chains
       require('which-key').register {
         ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
@@ -37,9 +38,28 @@ return {
     'lukas-reineke/indent-blankline.nvim',
     -- See `:help ibl`
     main = 'ibl',
-    opts = {},
+    opts = {
+      exclude = {
+        filetypes = {
+          "dashboard"
+        },
+      },
+    },
   },
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim', opts = {} },
+  {
+    'sudormrfbin/cheatsheet.nvim',
+    dependencies = {
+      { 'nvim-telescope/telescope.nvim' },
+      { 'nvim-lua/popup.nvim' },
+      { 'nvim-lua/plenary.nvim' },
+    },
+    cmd = "Cheatsheet",
+    keys = {
+      { '<leader>.', '<cmd>Cheatsheet!<CR>', { desc = "Show Cheatsheet" } }
+    },
+
+  },
 }

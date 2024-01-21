@@ -7,7 +7,17 @@ return {
     dependencies = {
       { "folke/neodev.nvim", opts = {} },
       -- Automatically install LSPs to stdpath for neovim
-      { 'williamboman/mason.nvim', opts = {} },
+      { 'williamboman/mason.nvim',
+        opts = {
+          ui = {
+            icons = {
+              package_installed = "✓",
+              package_pending = "➜",
+              package_uninstalled = "✗"
+            }
+          }
+        },
+      },
       {
         'williamboman/mason-lspconfig.nvim',
         opts = {
@@ -18,6 +28,28 @@ return {
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})` or `config = true`
       { 'j-hui/fidget.nvim', opts = {} },
       { 'hrsh7th/cmp-nvim-lsp', opts = {} },
+    },
+    opts = {
+      -- options for vim.diagnostic.config()
+      diagnostics = {
+        underline = true,
+        update_in_insert = false,
+        virtual_text = {
+          spacing = 4,
+          source = "if_many",
+          prefix = "●",
+          -- this will set set the prefix to a function that returns the diagnostics icon based on the severity
+          -- this only works on a recent 0.10.0 build. Will be set to "●" when not supported
+          -- prefix = "icons",
+        },
+        severity_sort = true,
+      },
+      -- Enable this to enable the builtin LSP inlay hints on Neovim >= 0.10.0
+      -- Be aware that you also will need to properly configure your LSP server to
+      -- provide the inlay hints.
+      inlay_hints = {
+        enabled = false,
+      },
     },
     config = function()
       local on_attach = function(_, bufnr)
@@ -99,5 +131,13 @@ return {
       }
     end
   },
-
+  {
+    "jay-babu/mason-nvim-dap.nvim",
+    dependencies = {
+      "williamboman/mason.nvim",
+      "mfussenegger/nvim-dap",
+    },
+    cmd = { "DapInstall", "DapUninstall" },
+    opts = {},
+  }
 }
