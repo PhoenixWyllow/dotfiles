@@ -20,7 +20,6 @@ function Invoke-GitDotFiles {
     git --git-dir=$HOME/.cfg/ --work-tree=$HOME $args
 }
 Set-Alias -Name dotfiles -Value Invoke-GitDotFiles
-#endregion
 
 $env:XDG_CONFIG_HOME = "$HOME/.config"
 

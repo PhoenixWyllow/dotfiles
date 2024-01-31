@@ -94,10 +94,10 @@ return {
         -- gopls = {},
         pyright = {},
         -- rust_analyzer = {},
-        tsserver = {},
+        -- tsserver = {},
         -- html = { filetypes = { 'html', 'twig', 'hbs'} },
         taplo = {},
-        sqlls = {},
+        -- sqlls = {},
         lua_ls = {
           Lua = {
             workspace = { checkThirdParty = false },
@@ -106,6 +106,7 @@ return {
             -- diagnostics = { disable = { 'missing-fields' } },
           }
         },
+        marksman = {},
       }
 
       -- nvim-cmp supports additional completion capabilities, so broadcast that to servers

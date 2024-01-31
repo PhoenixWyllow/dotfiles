@@ -10,7 +10,7 @@ return {
     opts = {},
     cmd = "WhichKey",
     keys = {
-      { '<leader>W>', '<cmd>WhichKey<CR>', { desc = "[W]hichkey show all keys" } }
+      { '<C-w>', '<cmd>WhichKey<CR>', { desc = "[W]hichkey show all keys" } }
     },
     config = function()
       -- document existing key chains

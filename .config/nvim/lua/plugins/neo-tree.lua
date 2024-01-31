@@ -13,7 +13,7 @@ return {
     -- { "<leader>e", "<cmd>Neotree toggle<CR>", { desc = "Toggle [E]xplorer", opts = { silent = true } } },
     { "<leader>e",
       function()
-        local curr_ft = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(0),"ft")
+        local curr_ft = vim.api.nvim_buf_get_option(vim.api.nvim_win_get_buf(0), "ft")
         if string.find(curr_ft, "neo%-tree") then
           require("neo-tree.command").execute({ toggle = true })
         else
@@ -25,7 +25,7 @@ return {
     { "<leader>b", "<cmd>Neotree buffers reveal float<CR>", { desc = "Show open buffers", opts = { silent = true } } },
   },
   deactivate = function()
-      vim.cmd([[Neotree close]])
-    end,
+    vim.cmd([[Neotree close]])
+  end,
   config = true,
 }

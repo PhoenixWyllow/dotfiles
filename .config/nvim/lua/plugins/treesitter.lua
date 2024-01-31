@@ -8,7 +8,7 @@ return {
   config = function ()
     local configs = require("nvim-treesitter.configs")
     configs.setup({
-      ensure_installed = { 'python', 'tsx', 'javascript', 'typescript', 'bash', 'sql', 'toml' },
+      ensure_installed = { 'python', 'bash', 'lua', 'toml', "markdown", "markdown_inline", "json", "json5", "jsonc" },
       ignore_install = {},
       -- Autoinstall languages that are not installed. Defaults to false
       auto_install = true,
