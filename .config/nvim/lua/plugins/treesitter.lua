@@ -5,10 +5,19 @@ return {
     'nvim-treesitter/nvim-treesitter-textobjects',
   },
   build = ':TSUpdate',
-  config = function ()
+  config = function()
+    local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+    parser_config.powershell = {
+      install_info = {
+        url = "https://github.com/airbus-cert/tree-sitter-powershell",
+        files = { "src/parser.c", "src/scanner.c" }
+      },
+      filetype = "ps1",
+      used_by = { "psm1", "psd1", "pssc", "psxml", "cdxml" }
+    }
     local configs = require("nvim-treesitter.configs")
     configs.setup({
-      ensure_installed = { 'python', 'bash', 'lua', 'toml', "markdown", "markdown_inline", "json", "json5", "jsonc" },
+      ensure_installed = { 'python', 'bash', 'lua', 'toml', "markdown", "markdown_inline", "json", "json5", "jsonc", "yaml" },
       ignore_install = {},
       -- Autoinstall languages that are not installed. Defaults to false
       auto_install = true,
