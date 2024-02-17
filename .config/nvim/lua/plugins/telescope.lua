@@ -34,8 +34,8 @@ local function live_grep_git_root()
   end
 end
 
-local function kmap(k,f,o)
-  vim.keymap.set('n',k,f,o)
+local function kmap(k, f, o)
+  vim.keymap.set('n', k, f, o)
 end
 
 return {
@@ -45,7 +45,7 @@ return {
     dependencies = {
       'nvim-lua/plenary.nvim',
     },
-    config = function ()
+    config = function()
       vim.api.nvim_create_user_command('LiveGrepGitRoot', live_grep_git_root, {})
 
       -- See `:help telescope.builtin`
@@ -76,12 +76,11 @@ return {
       kmap('<leader>sG', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by [G]rep on Git Root' })
       kmap('<leader>sd', tls_b.diagnostics, { desc = '[S]earch [D]iagnostics' })
       kmap('<leader>sr', tls_b.resume, { desc = '[S]earch [R]esume' })
-
     end,
   },
   {
     'nvim-telescope/telescope-ui-select.nvim',
-    config = function ()
+    config = function()
       require('telescope').setup {
         extensions = {
           ["ui-select"] = {
@@ -100,7 +99,7 @@ return {
     -- NOTE: If you are having trouble with this installation,
     --       refer to the README for telescope-fzf-native for more instructions.
     build = 'make',
-    enabled = vim.fn.executable("make") == 1,
+    enabled = vim.fn.executable("make") == 1 and vim.fn.executable("fzf") == 1,
     config = function()
       require("telescope").load_extension("fzf")
     end,

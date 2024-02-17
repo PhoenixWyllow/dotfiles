@@ -3,8 +3,24 @@ local config = {
     "mfussenegger/nvim-dap",
     dependencies = {
       { "rcarriga/nvim-dap-ui" },
+      {
+        "jay-babu/mason-nvim-dap.nvim",
+        dependencies = {
+          "williamboman/mason.nvim",
+        },
+        cmd = { "DapInstall", "DapUninstall" },
+        opts = {},
+      },
     },
-    config = function ()
+    keys = {
+      { "<F5>",    function() require("dap").continue() end,          desc = "Continue" },
+      { "<F10>",   function() require("dap").step_over() end,         desc = "Step over" },
+      { "<F11>",   function() require("dap").step_into() end,         desc = "Step into" },
+      { "<S-F11>", function() require("dap").step_out() end,          desc = "Step out" },
+      { "<S-F5>",  function() require("dap").terminate() end,         desc = "Terminate" },
+      { "<F9>",    function() require("dap").toggle_breakpoint() end, desc = "Toggle breakpoint" },
+    },
+    config = function()
       local dap = require "dap"
       local dapui = require("dapui")
       dapui.setup()
@@ -17,11 +33,6 @@ local config = {
       dap.listeners.before.event_exited["dapui_config"] = function()
         dapui.close({})
       end
-      vim.keymap.set('n', '<F5>', function() dap.continue() end)
-      vim.keymap.set('n', '<F10>', function() dap.step_over() end)
-      vim.keymap.set('n', '<F11>', function () dap.step_into() end)
-      vim.keymap.set('n', '<S-F11>', function() dap.step_out() end)
-      vim.keymap.set('n', '<F9>', function() dap.toggle_breakpoint() end)
     end
   },
 }

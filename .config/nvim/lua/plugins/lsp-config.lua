@@ -1,13 +1,32 @@
+local servers = {
+  pyright = {},
+  -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+  taplo = {},
+  -- sqlls = {},
+  lua_ls = {
+    Lua = {
+      workspace = { checkThirdParty = false },
+      telemetry = { enable = false },
+      -- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
+      -- diagnostics = { disable = { 'missing-fields' } },
+    }
+  },
+  marksman = {},
+}
+
 return {
   -- LSP Configuration & Plugins
   -- NOTE: This is where your plugins related to LSP can be installed.
   -- Search for lspconfig to find the configuration.
   {
     'neovim/nvim-lspconfig',
+    event = { "BufReadPost", "BufNewFile" },
+    cmd = { "LspInfo", "LspInstall", "LspUninstall", "Mason" },
     dependencies = {
-      { "folke/neodev.nvim", opts = {} },
+      { "folke/neodev.nvim",    opts = {} },
       -- Automatically install LSPs to stdpath for neovim
-      { 'williamboman/mason.nvim',
+      {
+        'williamboman/mason.nvim',
         opts = {
           ui = {
             icons = {
@@ -26,7 +45,7 @@ return {
       },
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})` or `config = true`
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim',    opts = {} },
       { 'hrsh7th/cmp-nvim-lsp', opts = {} },
     },
     opts = {
@@ -89,26 +108,6 @@ return {
         end, { desc = 'Format current buffer with LSP' })
       end
 
-      local servers = {
-        --clangd = {},
-        -- gopls = {},
-        pyright = {},
-        -- rust_analyzer = {},
-        -- tsserver = {},
-        -- html = { filetypes = { 'html', 'twig', 'hbs'} },
-        taplo = {},
-        -- sqlls = {},
-        lua_ls = {
-          Lua = {
-            workspace = { checkThirdParty = false },
-            telemetry = { enable = false },
-            -- NOTE: toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-            -- diagnostics = { disable = { 'missing-fields' } },
-          }
-        },
-        marksman = {},
-      }
-
       -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
@@ -132,13 +131,4 @@ return {
       }
     end
   },
-  {
-    "jay-babu/mason-nvim-dap.nvim",
-    dependencies = {
-      "williamboman/mason.nvim",
-      "mfussenegger/nvim-dap",
-    },
-    cmd = { "DapInstall", "DapUninstall" },
-    opts = {},
-  }
 }

@@ -6,6 +6,9 @@ require('core.config')
 -- [[ Basic Keymaps ]]
 require('core.keymaps')
 
+-- [[ Autocommands ]]
+require "core.autocmd"
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info

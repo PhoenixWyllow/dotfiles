@@ -1,28 +1,35 @@
 return {
-  -- Adds LSP completion capabilities
-  {
-    "hrsh7th/cmp-nvim-lsp"
-  },
-  -- Snippet Engine & its associated nvim-cmp source
-  {
-    "L3MON4D3/LuaSnip",
-    dependencies = {
-      "saadparwaiz1/cmp_luasnip",
-      "rafamadriz/friendly-snippets",
-    },
-  },
   -- Autocompletion
   {
     'hrsh7th/nvim-cmp',
+    event = { "BufReadPost", "BufNewFile" },
     dependencies = {
-      'hrsh7th/cmp-buffer', -- source for text in buffer
-      'hrsh7th/cmp-path', -- source for paths in commands
+      'hrsh7th/cmp-buffer',   -- source for text in buffer
+      'hrsh7th/cmp-path',     -- source for paths in commands
+      "hrsh7th/cmp-nvim-lsp", -- Adds LSP completion capabilities
+      "L3MON4D3/LuaSnip",     -- Snippet Engine & its associated nvim-cmp source
+      "saadparwaiz1/cmp_luasnip",
+      "rafamadriz/friendly-snippets",
+      {
+        "windwp/nvim-autopairs", -- autopairing of (){}[] etc
+        opts = {
+          fast_wrap = {},
+          disable_filetype = { "TelescopePrompt", "vim" },
+        },
+      },
     },
-    config = function ()
+    config = function()
+      local cmp = require 'cmp'
+
+      require("nvim-autopairs").setup()
+
+      -- setup cmp for autopairs
+      local cmp_autopairs = require "nvim-autopairs.completion.cmp"
+      cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
+
       local luasnip = require 'luasnip'
       require("luasnip.loaders.from_vscode").lazy_load()
 
-      local cmp = require 'cmp'
       cmp.setup {
         snippet = {
           expand = function(args)
@@ -69,18 +76,4 @@ return {
       }
     end
   },
-  -- autopairing of (){}[] etc
-  {
-    "windwp/nvim-autopairs",
-    opts = {
-      fast_wrap = {},
-      disable_filetype = { "TelescopePrompt", "vim" },
-    },
-    config = function()
-      -- setup cmp for autopairs
-      local cmp_autopairs = require "nvim-autopairs.completion.cmp"
-      require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
-    end,
-  },
 }
-

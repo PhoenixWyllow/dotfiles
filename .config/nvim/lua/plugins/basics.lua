@@ -41,7 +41,14 @@ return {
     opts = {
       exclude = {
         filetypes = {
-          "dashboard"
+          "help",
+          "dashboard",
+          "neo-tree",
+          "lazy",
+          "mason",
+          "notify",
+          "toggleterm",
+          "lazyterm",
         },
       },
     },
