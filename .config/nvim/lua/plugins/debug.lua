@@ -13,12 +13,12 @@ local config = {
       },
     },
     keys = {
-      { "<F5>",    function() require("dap").continue() end,          desc = "Continue" },
-      { "<F10>",   function() require("dap").step_over() end,         desc = "Step over" },
-      { "<F11>",   function() require("dap").step_into() end,         desc = "Step into" },
-      { "<S-F11>", function() require("dap").step_out() end,          desc = "Step out" },
-      { "<S-F5>",  function() require("dap").terminate() end,         desc = "Terminate" },
-      { "<F9>",    function() require("dap").toggle_breakpoint() end, desc = "Toggle breakpoint" },
+      { "<F5>",    function() require("dap").continue() end,          desc = "DAP: Continue" },
+      { "<F10>",   function() require("dap").step_over() end,         desc = "DAP: Step over" },
+      { "<F11>",   function() require("dap").step_into() end,         desc = "DAP: Step into" },
+      { "<S-F11>", function() require("dap").step_out() end,          desc = "DAP: Step out" },
+      { "<S-F5>",  function() require("dap").terminate() end,         desc = "DAP: Terminate" },
+      { "<F9>",    function() require("dap").toggle_breakpoint() end, desc = "DAP: Toggle breakpoint" },
     },
     config = function()
       local dap = require "dap"

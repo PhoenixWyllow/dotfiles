@@ -1,41 +1,13 @@
 -- See `:help telescope` and `:help telescope.setup()`
 
--- Telescope live_grep in git root
--- Function to find the git root directory based on the current buffer's path
-local function find_git_root()
-  -- Use the current buffer's path as the starting point for the git search
-  local current_file = vim.api.nvim_buf_get_name(0)
-  local current_dir
-  local cwd = vim.fn.getcwd()
-  -- If the buffer is not associated with a file, return nil
-  if current_file == '' then
-    current_dir = cwd
-  else
-    -- Extract the directory from the current file's path
-    current_dir = vim.fn.fnamemodify(current_file, ':h')
-  end
-
-  -- Find the Git root directory from the current file's path
-  local git_root = vim.fn.systemlist('git -C ' .. vim.fn.escape(current_dir, ' ') .. ' rev-parse --show-toplevel')[1]
-  if vim.v.shell_error ~= 0 then
-    print 'Not a git repository. Searching in current working directory'
-    return cwd
-  end
-  return git_root
-end
-
 -- Custom live_grep function to search in git root
 local function live_grep_git_root()
-  local git_root = find_git_root()
+  local git_root = require("core.utils").find_git_root()
   if git_root then
     require('telescope.builtin').live_grep {
       search_dirs = { git_root },
     }
   end
-end
-
-local function kmap(k, f, o)
-  vim.keymap.set('n', k, f, o)
 end
 
 return {
@@ -44,8 +16,19 @@ return {
     branch = '0.1.x',
     dependencies = {
       'nvim-lua/plenary.nvim',
+      'nvim-telescope/telescope-ui-select.nvim',
+    },
+    opts = {
+      extensions = {
+        ["ui-select"] = {
+          require("telescope.themes").get_dropdown {}
+        }
+      },
     },
     config = function()
+      require("telescope").load_extension("ui-select")
+
+      -- Telescope live_grep in git root
       vim.api.nvim_create_user_command('LiveGrepGitRoot', live_grep_git_root, {})
 
       -- See `:help telescope.builtin`
@@ -57,47 +40,50 @@ return {
         }
       end
 
-      kmap('<leader>?', tls_b.oldfiles, { desc = '[?] Find recently opened files' })
-      kmap('<leader><space>', tls_b.buffers, { desc = '[ ] Find existing buffers' })
-      kmap('<leader>/', function()
-        -- You can pass additional configuration to telescope to change theme, layout, etc.
-        tls_b.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-          winblend = 10,
-          previewer = false,
-        })
-      end, { desc = '[/] Fuzzily search in current buffer' })
-      kmap('<leader>s/', telescope_live_grep_open_files, { desc = '[S]earch [/] in Open Files' })
-      kmap('<leader>ss', tls_b.builtin, { desc = '[S]earch [S]elect Telescope' })
-      kmap('<leader>gf', tls_b.git_files, { desc = 'Search [G]it [F]iles' })
-      kmap('<leader>sf', tls_b.find_files, { desc = '[S]earch [F]iles' })
-      kmap('<leader>sh', tls_b.help_tags, { desc = '[S]earch [H]elp' })
-      kmap('<leader>sw', tls_b.grep_string, { desc = '[S]earch current [W]ord' })
-      kmap('<leader>sg', tls_b.live_grep, { desc = '[S]earch by [G]rep' })
-      kmap('<leader>sG', ':LiveGrepGitRoot<cr>', { desc = '[S]earch by [G]rep on Git Root' })
-      kmap('<leader>sd', tls_b.diagnostics, { desc = '[S]earch [D]iagnostics' })
-      kmap('<leader>sr', tls_b.resume, { desc = '[S]earch [R]esume' })
-    end,
-  },
-  {
-    'nvim-telescope/telescope-ui-select.nvim',
-    config = function()
-      require('telescope').setup {
-        extensions = {
-          ["ui-select"] = {
-            require("telescope.themes").get_dropdown {}
+      require("which-key").register({
+        ["<leader>"] = {
+          ["/"] = { function()
+            -- You can pass additional configuration to telescope to change theme, layout, etc.
+            tls_b.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+              winblend = 10,
+              previewer = false,
+            })
+          end, 'Fuzzily search in current buffer'
+          },
+          ["?"] = { tls_b.oldfiles, 'Find recently opened files' },
+          ["<space>"] = { tls_b.buffers, "Find existing buffers" },
+          k = { function()
+            tls_b.keymaps(require('telescope.themes').get_dropdown {
+              winblend = 10,
+              previewer = false,
+            })
+          end, "Open Command Pallet"
+          },
+          g = {
+            name = "Git",
+            f = { tls_b.git_files, "Git search files" },
+            g = { "<cmd>LiveGrepGitRoot<cr>", "Git grep search on root" }
+          },
+          s = {
+            name = "Search",
+            ["/"] = { telescope_live_grep_open_files, "Search in open files" },
+            s = { tls_b.builtin, "Search select telescope" },
+            f = { tls_b.find_files, "Search files" },
+            h = { tls_b.help_tags, "Search help" },
+            w = { tls_b.grep_string, "Search current word" },
+            g = { tls_b.live_grep, "Search by grep" },
+            d = { tls_b.diagnostics, "Search diagnostics" },
+            r = { tls_b.resume, "Search resume" },
           }
         }
-      }
-      require('telescope').load_extension('ui-select')
-    end
+      })
+    end,
   },
   -- Fuzzy Finder Algorithm which requires local dependencies to be built.
-  -- Only load if `make` is available. Make sure you have the system
-  -- requirements installed.
+  -- Only load if `make` and `fzf` are available.
   {
     'nvim-telescope/telescope-fzf-native.nvim',
-    -- NOTE: If you are having trouble with this installation,
-    --       refer to the README for telescope-fzf-native for more instructions.
+    -- NOTE: Refer to the README for telescope-fzf-native for more info.
     build = 'make',
     enabled = vim.fn.executable("make") == 1 and vim.fn.executable("fzf") == 1,
     config = function()

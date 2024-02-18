@@ -1,11 +1,4 @@
 return {
-  --[[ {
-    'Mofiqul/dracula.nvim',
-    priority = 1000,
-    config = function ()
-      vim.cmd.colorscheme 'dracula'
-    end
-  }, ]]
   {
     "catppuccin/nvim",
     name = "catppuccin",
@@ -29,15 +22,4 @@ return {
       vim.cmd.colorscheme "catppuccin"
     end
   },
-  --[[ {
-    'navarasu/onedark.nvim',
-    priority = 1000,
-    opts = {
-      style = 'darker',
-      transparent = true,
-    },
-    config = function()
-      require('onedark').load()
-    end,
-  }, ]]
 }

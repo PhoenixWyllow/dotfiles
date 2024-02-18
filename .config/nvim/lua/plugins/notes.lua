@@ -1,0 +1,14 @@
+return {}
+-- local home = require "core.utils".get_config_key("notes")
+--
+-- return {
+--   'renerocksai/telekasten.nvim',
+--     dependencies = {
+--       'nvim-telescope/telescope.nvim',
+--       'nvim-lua/plenary.nvim'
+--     },
+--   opts = {
+--     home = home,
+--     tag_notation = "yaml-bare"
+--   }
+-- }
