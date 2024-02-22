@@ -17,6 +17,13 @@ return {
     dependencies = {
       'nvim-lua/plenary.nvim',
       'nvim-telescope/telescope-ui-select.nvim',
+      -- Fuzzy Finder Algorithm which requires local dependencies to be built.
+      -- Only load if `make` and `fzf` are available.
+      {
+        'nvim-telescope/telescope-fzf-native.nvim',
+        -- NOTE: Refer to the README for telescope-fzf-native for more info.
+        build = 'make',
+      }
     },
     opts = {
       extensions = {
@@ -27,6 +34,9 @@ return {
     },
     config = function()
       require("telescope").load_extension("ui-select")
+      if vim.fn.executable("make") == 1 and vim.fn.executable("fzf") == 1 then
+        require("telescope").load_extension("fzf")
+      end
 
       -- Telescope live_grep in git root
       vim.api.nvim_create_user_command('LiveGrepGitRoot', live_grep_git_root, {})
@@ -53,10 +63,7 @@ return {
           ["?"] = { tls_b.oldfiles, 'Find recently opened files' },
           ["<space>"] = { tls_b.buffers, "Find existing buffers" },
           k = { function()
-            tls_b.keymaps(require('telescope.themes').get_dropdown {
-              winblend = 10,
-              previewer = false,
-            })
+            require("core.command_pallet").show({})
           end, "Open Command Pallet"
           },
           g = {
@@ -81,7 +88,7 @@ return {
   },
   -- Fuzzy Finder Algorithm which requires local dependencies to be built.
   -- Only load if `make` and `fzf` are available.
-  {
+  --[[   {
     'nvim-telescope/telescope-fzf-native.nvim',
     -- NOTE: Refer to the README for telescope-fzf-native for more info.
     build = 'make',
@@ -89,5 +96,5 @@ return {
     config = function()
       require("telescope").load_extension("fzf")
     end,
-  },
+  }, ]]
 }

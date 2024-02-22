@@ -1,20 +1,25 @@
-local write_msg = vim.api.nvim_out_write
-local write_err = vim.api.nvim_err_write
+local function write_msg(msg)
+	vim.notify(msg, vim.log.levels.INFO)
+end
+
+local function write_err(msg)
+	vim.notify(msg, vim.log.levels.WARN)
+end
+
 local M = {}
 
 -- Function to create a file if it doesn't exist
 local function ensure_file_exists(path)
-	if vim.fn.exists(path) == 0 then
-		local success = vim.fn.writefile({}, path)
-		if success == 0 then
-			write_msg("File created: " .. path)
-			return true
-		else
-			write_err("Error: Unable to create file " .. path)
-			return false
-		end
+	if vim.fn.filereadable(path) == 1 then
+		return true
 	end
-	return true
+	local success = vim.fn.writefile({}, path)
+	if success == 0 then
+		write_msg("File created: " .. path)
+		return true
+	end
+	write_err("Error: Unable to create file " .. path)
+	return false
 end
 
 -- Function to get the file content
@@ -30,7 +35,7 @@ end
 -- Function to read the content of the file and check for the key
 local function read_file_and_check_key(path, key)
 	local data = get_file_content(path)
-	if data and data[key] then
+	if data and data[key] and #data[key] > 0 then
 		return data[key]
 	end
 	return nil
@@ -39,22 +44,21 @@ end
 -- Function to add the value to the file and return the value if success
 local function add_value_to_file(path, key, value)
 	local data = get_file_content(path)
-	data[key] = value
+	data[key] = vim.fn.fnameescape(vim.fn.expand(value))
 	local json_data = vim.fn.json_encode(data)
 	local success = vim.fn.writefile({ json_data }, path)
 	if success == 0 then
-		write_msg("Value added to " .. path)
+		write_msg("\nValue added to " .. path)
 		return value
-	else
-		write_err("Error: Unable to update file " .. path)
-		return nil
 	end
+	write_err("\nError: Unable to update file " .. path)
+	return nil
 end
 
 -- Function to create a file and handle key-value operations
-function M.get_config_key(key)
+function M.get_config_key(key, type)
 	-- Construct the file path
-	local path = vim.fn.expand("$HOME") .. "/.config/nvim.json"
+	local path = vim.fn.expand("$HOME/.config/nvim.json")
 
 	if not ensure_file_exists(path) then
 		return nil
@@ -65,7 +69,10 @@ function M.get_config_key(key)
 		return value
 	end
 
-	value = vim.fn.input("Enter value for " .. key .. ": ")
+	value = vim.fn.input({
+		prompt = "Enter value for " .. key .. ": ",
+		completion = type
+	})
 	return add_value_to_file(path, key, value)
 end
 
@@ -86,9 +93,9 @@ function M.find_git_root()
 	end
 
 	-- Find the Git root directory from the current file's path
-	local git_root = vim.fn.systemlist('git -C ' .. vim.fn.escape(current_dir, ' ') .. ' rev-parse --show-toplevel')[1]
+	local git_root = vim.fn.systemlist('git -C ' .. vim.fn.fnameescape(current_dir) .. ' rev-parse --show-toplevel')[1]
 	if vim.v.shell_error ~= 0 then
-		print 'Not a git repository. Searching in current working directory'
+		write_msg('Not a git repository. Searching in current working directory')
 		return cwd
 	end
 	return git_root
