@@ -1,9 +1,0 @@
-lastupdatecheck: 0
-recentrepos:
-- C:\Users\wdrpe
-startuppopupversion: 5
-customcommandshistory:
-- dotfiles add ./.config/lazygit
-- git add ./.config/lazygit
-hidecommandlog: false
-ignorewhitespaceindiffview: false
