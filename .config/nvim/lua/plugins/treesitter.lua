@@ -7,6 +7,7 @@ return {
   },
   build = ':TSUpdate',
   config = function()
+    require("nvim-treesitter.install").compilers = { "zig", vim.fn.getenv('CC'), "cc", "gcc", "clang", "cl" } -- in windows, yaml seems to fail on load if installed without zig or clang
     local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
     parser_config.powershell = {
       install_info = {
