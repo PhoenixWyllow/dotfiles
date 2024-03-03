@@ -1,10 +1,10 @@
 -- There are `:help X` comments which you should run to read the help section for more information.
 
 -- [[ Setting options ]]
-require('core.config')
+require("core.config")
 
 -- [[ Basic Keymaps ]]
-require('core.keymaps')
+require("core.keymaps")
 
 -- [[ Autocommands ]]
 require "core.autocmd"
@@ -28,7 +28,7 @@ vim.opt.rtp:prepend(lazypath)
 -- [[ Configure plugins ]]
 --  You can also configure plugins after the setup call,
 --    as they will be available in your neovim runtime.
-require('lazy').setup('plugins', {})
+require("lazy").setup("plugins", {})
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et

@@ -12,23 +12,24 @@ end
 
 return {
   {
-    'nvim-telescope/telescope.nvim',
-    branch = '0.1.x',
+    "nvim-telescope/telescope.nvim",
+    event = "VeryLazy",
+    branch = "0.1.x",
     dependencies = {
-      'nvim-lua/plenary.nvim',
-      'nvim-telescope/telescope-ui-select.nvim',
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope-ui-select.nvim",
       -- Fuzzy Finder Algorithm which requires local dependencies to be built.
       -- Only load if `make` and `fzf` are available.
       {
-        'nvim-telescope/telescope-fzf-native.nvim',
+        "nvim-telescope/telescope-fzf-native.nvim",
         -- NOTE: Refer to the README for telescope-fzf-native for more info.
-        build = 'make',
+        build = "make",
       }
     },
     opts = {
       extensions = {
         ["ui-select"] = {
-          require("telescope.themes").get_dropdown {}
+          require("telescope.themes").get_dropdown { winblend = 10 }
         }
       },
     },
@@ -42,7 +43,7 @@ return {
       vim.api.nvim_create_user_command('LiveGrepGitRoot', live_grep_git_root, {})
 
       -- See `:help telescope.builtin`
-      local tls_b = require 'telescope.builtin'
+      local tls_b = require "telescope.builtin"
       local function telescope_live_grep_open_files()
         tls_b.live_grep {
           grep_open_files = true,
@@ -54,13 +55,14 @@ return {
         ["<leader>"] = {
           ["/"] = { function()
             -- You can pass additional configuration to telescope to change theme, layout, etc.
-            tls_b.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+            tls_b.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown {
               winblend = 10,
               previewer = false,
             })
           end, 'Fuzzily search in current buffer'
           },
-          ["?"] = { tls_b.oldfiles, 'Find recently opened files' },
+          ["_"] = { tls_b.oldfiles, 'Find recently opened files' },
+          ["?"] = { tls_b.help_tags, 'Find help tags' },
           ["<space>"] = { tls_b.buffers, "Find existing buffers" },
           k = { function()
             require("core.command_pallet").show({})

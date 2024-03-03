@@ -1,9 +1,9 @@
 return {
   -- Highlight, edit, and navigate code
-  'nvim-treesitter/nvim-treesitter',
+  "nvim-treesitter/nvim-treesitter",
   event = { "BufEnter" },
   dependencies = {
-    'nvim-treesitter/nvim-treesitter-textobjects',
+    "nvim-treesitter/nvim-treesitter-textobjects",
   },
   build = ':TSUpdate',
   config = function()
@@ -19,7 +19,7 @@ return {
     }
     local configs = require("nvim-treesitter.configs")
     configs.setup({
-      ensure_installed = { 'python', 'bash', 'lua', 'toml', "markdown", "markdown_inline", "json", "json5", "jsonc", "yaml" },
+      ensure_installed = { "bash", "lua", "toml", "markdown", "markdown_inline", "json", "json5", "jsonc", "yaml" },
       ignore_install = {},
       -- Autoinstall languages that are not installed. Defaults to false
       auto_install = true,

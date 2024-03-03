@@ -1,7 +1,7 @@
 -- See `:help lualine.txt`
 return {
   -- Set lualine as statusline
-  'nvim-lualine/lualine.nvim',
+  "nvim-lualine/lualine.nvim",
   opts = {
     options = {
       component_separators = '|',

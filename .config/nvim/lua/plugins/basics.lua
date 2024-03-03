@@ -1,4 +1,7 @@
 return {
+  -- automatically adjusts 'shiftwidth' and 'expandtab' heuristically based on
+  -- the current file, files of the same type in current and parent directories, modelines, or EditorConfig
+  'tpope/vim-sleuth',
   -- Useful plugin to show you pending keybinds.
   {
     'folke/which-key.nvim',
@@ -67,6 +70,7 @@ return {
   -- "gc" to comment visual regions/lines
   {
     'numToStr/Comment.nvim',
+    event = "VeryLazy",
     opts = {}
   },
   {
@@ -81,5 +85,11 @@ return {
       { '<leader>.', '<cmd>Cheatsheet!<CR>', { desc = "Show Cheatsheet" } }
     },
 
+  },
+  {
+    "kylechui/nvim-surround",
+    version = "*", -- Use for stability; omit to use `main` branch for the latest features
+    event = "VeryLazy",
+    opts = {}
   },
 }
