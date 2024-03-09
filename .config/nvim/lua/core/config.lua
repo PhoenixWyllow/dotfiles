@@ -24,7 +24,7 @@ o.clipboard = 'unnamedplus'
 
 -- Set tabs to 2 spaces
 o.tabstop = 2
-o.softtabstop = 2
+o.softtabstop = 0
 o.expandtab = true
 
 -- Enable auto indenting and set it to spaces
