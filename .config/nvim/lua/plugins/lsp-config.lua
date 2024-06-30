@@ -85,7 +85,6 @@ return {
     event = { "BufReadPost", "BufNewFile" },
     cmd = { "LspInfo", "LspInstall", "LspUninstall", "Mason" },
     dependencies = {
-      { "folke/neodev.nvim",    opts = {} },
       -- Automatically install LSPs to stdpath for neovim
       {
         "williamboman/mason.nvim",
