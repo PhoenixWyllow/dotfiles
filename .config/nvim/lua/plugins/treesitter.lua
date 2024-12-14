@@ -19,7 +19,7 @@ return {
     }
     local configs = require("nvim-treesitter.configs")
     configs.setup({
-      ensure_installed = { "bash", "lua", "toml", "markdown", "markdown_inline", "json", "json5", "jsonc", "yaml" },
+      ensure_installed = { "bash", "lua", "toml", "markdown", "markdown_inline", "json", "json5", "jsonc", "yaml", "vim", "vimdoc", "latex" },
       ignore_install = {},
       -- Autoinstall languages that are not installed. Defaults to false
       auto_install = true,
