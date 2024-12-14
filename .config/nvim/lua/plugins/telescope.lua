@@ -51,40 +51,38 @@ return {
         }
       end
 
-      require("which-key").register({
-        ["<leader>"] = {
-          ["/"] = { function()
-            -- You can pass additional configuration to telescope to change theme, layout, etc.
+      require "which-key".add({
+        {
+          "<leader>/",
+          function()
             tls_b.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown {
               winblend = 10,
               previewer = false,
             })
-          end, 'Fuzzily search in current buffer'
-          },
-          ["_"] = { tls_b.oldfiles, 'Find recently opened files' },
-          ["?"] = { tls_b.help_tags, 'Find help tags' },
-          ["<space>"] = { tls_b.buffers, "Find existing buffers" },
-          k = { function()
+          end,
+          desc = 'Fuzzily search in current buffer'
+        },
+        { '<leader>_',       tls_b.oldfiles,  desc = 'Find recently opened files' },
+        { '<leader>?',       tls_b.help_tags, desc = 'Find help tags' },
+        { "<leader><space>", tls_b.buffers,   desc = "Find existing buffers" },
+        {
+          '<leader>k',
+          function()
             require("core.command_pallet").show({})
-          end, "Open Command Pallet"
-          },
-          g = {
-            name = "Git",
-            f = { tls_b.git_files, "Git search files" },
-            g = { "<cmd>LiveGrepGitRoot<cr>", "Git grep search on root" }
-          },
-          s = {
-            name = "Search",
-            ["/"] = { telescope_live_grep_open_files, "Search in open files" },
-            s = { tls_b.builtin, "Search select telescope" },
-            f = { tls_b.find_files, "Search files" },
-            h = { tls_b.help_tags, "Search help" },
-            w = { tls_b.grep_string, "Search current word" },
-            g = { tls_b.live_grep, "Search by grep" },
-            d = { tls_b.diagnostics, "Search diagnostics" },
-            r = { tls_b.resume, "Search resume" },
-          }
-        }
+          end,
+          desc = "Open Command Pallet"
+        },
+        { '<leader>g',  group = "Git" },
+        { '<leader>gf', tls_b.git_files,                desc = "Git search files" },
+        { '<leader>gg', "<cmd>LiveGrepGitRoot<cr>",     desc = "Git grep search on root" },
+        { '<leader>s',  group = 'Search' },
+        { '<leader>s/', telescope_live_grep_open_files, desc = "Search in open files" },
+        { '<leader>ss', tls_b.builtin,                  desc = "Search select telescope" },
+        { '<leader>sf', tls_b.find_files,               desc = "Search files" },
+        { '<leader>sh', tls_b.help_tags,                desc = "Search help" },
+        { '<leader>sw', tls_b.grep_string,              desc = "Search current word" },
+        { '<leader>sg', tls_b.live_grep,                desc = "Search by grep" },
+        { '<leader>sd', tls_b.diagnostics,              desc = "Search diagnostics" },
       })
     end,
   },

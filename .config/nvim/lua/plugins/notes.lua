@@ -10,8 +10,8 @@ return {
     tag_notation = "yaml-bare",
   },
   config = function()
-    require("which-key").register({
-      ["<leader>z"] = { "<cmd>Telekasten panel<CR>", "Telekasten commands show" }
+    require "which-key".add({
+      { "<leader>z", "<cmd>Telekasten panel<CR>", desc = "Telekasten commands show" }
     })
   end
 }

@@ -61,6 +61,10 @@ return {
       cmp.setup {
         formatting = {
           format = function(entry, vim_item)
+            --[[ local is_dep = entry.is_deprecated()
+            if is_dep then
+              entry.word = "[Dep]" + entry.word
+            end ]]
             -- Kind icons
             vim_item.kind = string.format('%s %s', kind_icons[vim_item.kind], vim_item.kind)
             return vim_item

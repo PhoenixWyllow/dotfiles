@@ -31,28 +31,30 @@ local on_attach = function(client, bufnr)
   local function lsp(desc)
     return "LSP: " .. desc
   end
-  require("which-key").register({
-    ["<leader>"] = {
-      rn = { vim.lsp.buf.rename, lsp('[R]e[n]ame') },
-      ca = { vim.lsp.buf.code_action, lsp('[C]ode [A]ction') },
-      D = { require("telescope.builtin").lsp_type_definitions, lsp('Type [D]efinition') },
-      ds = { require("telescope.builtin").lsp_document_symbols, lsp('[D]ocument [S]ymbols') },
-      ws = { require("telescope.builtin").lsp_dynamic_workspace_symbols, lsp('[W]orkspace [S]ymbols') },
-      wa = { vim.lsp.buf.add_workspace_folder, lsp('[W]orkspace [A]dd Folder') },
-      wr = { vim.lsp.buf.remove_workspace_folder, lsp('[W]orkspace [R]emove Folder') },
-      wl = { function()
+  local tbi = require "telescope.builtin"
+  require "which-key".add({
+    { "<leader>rn", vim.lsp.buf.rename,                  desc = lsp('[R]e[n]ame') },
+    { "<leader>ca", vim.lsp.buf.code_action,             desc = lsp('[C]ode [A]ction') },
+    { "<leader>D",  tbi.lsp_type_definitions,            desc = lsp('Type [D]efinition') },
+    { "<leader>ds", tbi.lsp_document_symbols,            desc = lsp('[D]ocument [S]ymbols') },
+    { "<leader>ws", tbi.lsp_dynamic_workspace_symbols,   desc = lsp('[W]orkspace [S]ymbols') },
+    { "<leader>wa", vim.lsp.buf.add_workspace_folder,    desc = lsp('[W]orkspace [A]dd Folder') },
+    { "<leader>wr", vim.lsp.buf.remove_workspace_folder, desc = lsp('[W]orkspace [R]emove Folder') },
+    {
+      "<leader>wl",
+      function()
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-      end, lsp('[W]orkspace [L]ist Folders') },
+      end,
+      desc = lsp('[W]orkspace [L]ist Folders')
     },
-    g = {
-      d = { require("telescope.builtin").lsp_definitions, lsp('[G]oto [D]efinition') },
-      D = { vim.lsp.buf.declaration, lsp('[G]oto [D]eclaration') },
-      r = { require("telescope.builtin").lsp_references, lsp('[G]oto [R]eferences') },
-      I = { require("telescope.builtin").lsp_implementations, lsp('[G]oto [I]mplementation') },
-    },
+    { "<leader>gd", tbi.lsp_definitions,        desc = lsp('[G]oto [D]efinition') },
+    { "<leader>gD", vim.lsp.buf.declaration,    desc = lsp('[G]oto [D]eclaration') },
+    { "<leader>gr", tbi.lsp_references,         desc = lsp('[G]oto [R]eferences') },
+    { "<leader>gI", tbi.lsp_implementations,    desc = lsp('[G]oto [I]mplementation') },
     -- See `:help K` for why this keymap
-    K = { vim.lsp.buf.hover, lsp('Hover Documentation') },
-    ["<C-k>"] = { vim.lsp.buf.signature_help, lsp('Signature Documentation') },
+    { "<leader>K",  vim.lsp.buf.hover,          desc = lsp('Hover Documentation') },
+    --["<C-k>"] = { vim.lsp.buf.signature_help, lsp('Signature Documentation') },
+    { "<leader>k>", vim.lsp.buf.signature_help, desc = lsp('Signature Documentation') },
   })
 
   -- Create a command `:Format` local to the LSP buffer
