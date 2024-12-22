@@ -26,7 +26,7 @@ function Invoke-GitDotFiles {
 Set-Alias -Name dotfiles -Value Invoke-GitDotFiles
 ```
 
->[info]
+> [!NOTE]
 > you may need to install the treesitter cli. run:
 > ```shell
 > npm install -g tree-sitter-cli
