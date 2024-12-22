@@ -6,7 +6,7 @@ return {
   },
   cmd = "Telekasten",
   opts = {
-    home = require "core.utils".get_config_key("notes", "file"),
+    home = require "core.utils".get_config_key("notes", "file", vim.fn.expand("$HOME/Documents/Notes")),
     tag_notation = "yaml-bare",
   },
   config = function()

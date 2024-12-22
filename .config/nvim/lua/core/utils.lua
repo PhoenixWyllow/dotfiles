@@ -56,7 +56,7 @@ local function add_value_to_file(path, key, value)
 end
 
 -- Function to create a file and handle key-value operations
-function M.get_config_key(key, type)
+function M.get_config_key(key, type, default_value)
 	-- Construct the file path
 	local path = vim.fn.expand("$HOME/.config/nvim.json")
 
@@ -71,7 +71,8 @@ function M.get_config_key(key, type)
 
 	value = vim.fn.input({
 		prompt = "Enter value for " .. key .. ": ",
-		completion = type
+		completion = type,
+		default = default_value,
 	})
 	return add_value_to_file(path, key, value)
 end
