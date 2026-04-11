@@ -97,8 +97,13 @@ return {
               package_pending = "➜",
               package_uninstalled = "✗"
             }
-          }
+          },
+          registries = {
+            'github:mason-org/mason-registry',
+            'github:crashdummyy/mason-registry',
+          },
         },
+
       },
       {
         "williamboman/mason-lspconfig.nvim",
