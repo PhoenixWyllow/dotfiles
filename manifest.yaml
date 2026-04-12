@@ -1,0 +1,22 @@
+# type defaults to file. mode defaults to copy.
+# Only specify type: dir when the source is a directory.
+# Only specify mode when it differs from copy.
+entries:
+  - source: config/nvim
+    target: ~/.config/nvim
+    type: dir
+
+  - source: config/lazygit
+    target: ~/.config/lazygit
+    type: dir
+
+  - source: config/starship.toml
+    target: ~/.config/starship.toml
+
+# Platform-specific entries.
+linux:
+  - source: home/.bashrc
+    target: ~/.bashrc
+
+  - source: home/.zshrc
+    target: ~/.zshrc

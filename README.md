@@ -1,33 +1,72 @@
-Make sure git-scm (and optionally github-cli) are installed and configured.
+# Dotfiles
 
-The terminal prompt requires starship and nerdfonts to be installed.
+This repository uses a normal non-bare git layout plus repo-owned scripts for deployment and capture.
 
-in Linux use:
-```shell
-curl https://gist.githubusercontent.com/PhoenixWyllow/3ca15ab36343cdb7647633b9538bfdb0/raw/linux-apply-dotfiles.sh | /bin/bash
+## Layout
+
+```text
+.
+├── home/                    # maps to ~/.
+├── config/                  # maps to ~/.config/
+├── scripts/
+├── manifest.yaml
 ```
 
-in Windows use:
+## First bootstrap on a machine
+
+Linux and WSL:
+
+```sh
+git clone https://github.com/PhoenixWyllow/dotfiles.git ~/.dotfiles
+cd ~/.dotfiles
+bash scripts/bootstrap-git-aliases.sh
+git df-apply
+```
+
+Windows-native PowerShell 7:
+
 ```powershell
-Invoke-WebRequest https://gist.githubusercontent.com/PhoenixWyllow/f9f3950ec3bb4ef11e229d6761c77c5e/raw/win-apply-dotfiles.ps1 | Invoke-Expression
+git clone https://github.com/PhoenixWyllow/dotfiles.git $HOME/.dotfiles
+Set-Location $HOME/.dotfiles
+pwsh -NoProfile -File scripts/bootstrap-git-aliases.ps1
+git df-apply
 ```
 
-For Windows: The powershell profile I use is stored in onedrive since my documents are mapped there already.
-I use this configuration in my profile to have portability of a `dotfiles` alias and configure neovim to use a conventional xdg path (starship does this already):
+After that, aliases are available and can be refreshed anytime with `git df-bootstrap`.
+
+## Daily commands
+
+```sh
+git df-doctor
+git df-apply --dry-run
+git df-apply
+git df-capture
+```
+
+These aliases intentionally use the `df-` prefix because `git apply` is already a built-in git command.
+
+## Requirements
+
+- Linux and WSL: `git`, `bash`, `rg`, `nvim`
+- Windows-native: `git`, `pwsh`, `rg`, `nvim`
+- recommended: `starship`, `lazygit`
+- optional for Treesitter workflows:
+
+```sh
+npm install -g tree-sitter-cli
+```
+
+## Windows
+
+Native Windows deployment is supported through the PowerShell scripts in `scripts/*.ps1`.
+
+WSL is treated as Linux, so `linux:` manifest entries apply there. Native Windows uses the PowerShell scripts and the `windows:` manifest section.
+
+The `.gitattributes` file in this repo enforces LF line endings so the bash scripts keep working on Linux and WSL even if the repo is also cloned from Windows.
+
+For XDG-style portability, configure your PowerShell profile:
 
 ```powershell
 $env:XDG_CONFIG_HOME = "$HOME/.config"
-
 starship init powershell | Invoke-Expression
-
-function Invoke-GitDotFiles {
-    git --git-dir=$HOME/.cfg/ --work-tree=$HOME $args
-}
-Set-Alias -Name dotfiles -Value Invoke-GitDotFiles
 ```
-
-> [!NOTE]
-> you may need to install the treesitter cli. run:
-> ```shell
-> npm install -g tree-sitter-cli
-> ```

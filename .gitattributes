@@ -1,0 +1,7 @@
+# Force LF line endings for all shell scripts and text files.
+# This prevents CRLF endings on Windows (core.autocrlf=true) which break bash.
+*.sh    text eol=lf
+*.ps1   text eol=lf
+*.yaml  text eol=lf
+*.md    text eol=lf
+*.toml  text eol=lf

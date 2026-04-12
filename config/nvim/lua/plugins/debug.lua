@@ -6,7 +6,7 @@ local config = {
       {
         "jay-babu/mason-nvim-dap.nvim",
         dependencies = {
-          "williamboman/mason.nvim",
+          "mason-org/mason.nvim",
         },
         cmd = { "DapInstall", "DapUninstall" },
         opts = {},
