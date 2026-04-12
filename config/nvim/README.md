@@ -54,21 +54,21 @@ Run directly from the repository with isolated state (no copy or symlink). After
 **Bash**
 
 ```bash
-cd ~/.dotfiles/dotfiles
+cd ~/.dotfiles
 nvim-dev
 ```
 
 **Zsh**
 
 ```bash
-cd ~/.dotfiles/dotfiles
+cd ~/.dotfiles
 nvim-dev
 ```
 
 **PowerShell**
 
 ```powershell
-cd $env:USERPROFILE\.dotfiles\dotfiles
+cd $env:USERPROFILE\.dotfiles
 $env:XDG_CONFIG_HOME = "$PWD/config"
 $env:XDG_DATA_HOME = "$PWD/.devstate/data"
 $env:XDG_STATE_HOME = "$PWD/.devstate/state"

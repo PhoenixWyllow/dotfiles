@@ -14,33 +14,33 @@ This repository uses a normal non-bare git layout plus repo-owned scripts for de
 
 ## Installation
 
-Linux and WSL:
-
 ```sh
 git clone https://github.com/PhoenixWyllow/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
-bash scripts/apply.sh
 ```
 
-Windows-native PowerShell 7:
-
-```powershell
-git clone https://github.com/PhoenixWyllow/dotfiles.git $HOME/.dotfiles
-Set-Location $HOME/.dotfiles
-./scripts/apply.ps1
-```
+Then run the appropriate apply script for your platform:
+- Linux and WSL: 
+  ```sh
+  bash scripts/apply.sh
+  ```
+- Windows-native PowerShell 7:
+  ```powershell
+  ./scripts/apply.ps1
+  ```
 
 Optional convenience aliases (run once per clone or machine):
 
-```sh
-bash scripts/bootstrap-git-aliases.sh
-git df-apply
-```
-or 
-```powershell
-./scripts/bootstrap-git-aliases.ps1
-git df-apply
-```
+- Linux and WSL:
+  ```sh
+  bash scripts/bootstrap-aliases.sh
+  ```
+- Windows-native PowerShell 7:
+  ```powershell
+  ./scripts/bootstrap-aliases.ps1
+  ```
+
+This adds `git df-*` aliases for the daily commands below.
 
 After bootstrap, aliases can be refreshed anytime with `git df-bootstrap`.
 
