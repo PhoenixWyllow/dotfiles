@@ -112,5 +112,7 @@ shopt -s expand_aliases
 # Enable history appending instead of overwriting.  #139609
 shopt -s histappend
 
-alias dotfiles='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 eval "$(starship init bash)"
+
+# Neovim dev mode alias (run from dotfiles repo root)
+alias nvim-dev='XDG_CONFIG_HOME="$PWD/config" XDG_DATA_HOME="$PWD/.devstate/data" XDG_STATE_HOME="$PWD/.devstate/state" XDG_CACHE_HOME="$PWD/.devstate/cache" nvim'

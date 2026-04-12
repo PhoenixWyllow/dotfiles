@@ -33,28 +33,13 @@ Required on both platforms unless noted.
 - Git for Windows
 - Ripgrep (`winget install BurntSushi.ripgrep.MSVC` or `scoop install ripgrep`)
 - A C compiler — zig is the easiest choice (`winget install zig.zig`); MSVC works too
-- PowerShell with `$env:XDG_CONFIG_HOME = "$HOME/.config"` in your profile (see [Installation](#installation))
+- PowerShell with `$env:XDG_CONFIG_HOME = "$HOME/.config"` in your profile
 - Optional: fzf (`winget install junegunn.fzf` or `scoop install fzf`)
 
-## Installation
+## First Run
 
-This config is part of a dotfiles repository managed as a bare git repo. Each platform has a one-liner bootstrap that clones it and sets up the `dotfiles` alias.
-
-**Linux**
-
-```sh
-curl https://gist.githubusercontent.com/PhoenixWyllow/3ca15ab36343cdb7647633b9538bfdb0/raw/linux-apply-dotfiles.sh | /bin/bash
-```
-
-**Windows** (PowerShell)
-
-```powershell
-Invoke-WebRequest https://gist.githubusercontent.com/PhoenixWyllow/f9f3950ec3bb4ef11e229d6761c77c5e/raw/win-apply-dotfiles.ps1 | Invoke-Expression
-```
-
-Both scripts place the Neovim config at `~/.config/nvim/`. On Windows this works because the PowerShell profile sets `$env:XDG_CONFIG_HOME = "$HOME/.config"`, which Neovim respects.
-
-After the dotfiles bootstrap, first-run Neovim setup:
+Installation and deployment are documented in the repository root README.
+After applying dotfiles, first-run Neovim setup:
 
 1. Start Neovim
 2. Run `:Lazy sync` to install plugins
@@ -62,12 +47,51 @@ After the dotfiles bootstrap, first-run Neovim setup:
 
 On first use, Mason will install LSP servers and Treesitter will compile parsers. Both may take a few minutes.
 
+## Test From Repo (Dev Mode)
+
+Run directly from the repository with isolated state (no copy or symlink). After applying dotfiles, use the `nvim-dev` command from the repo root:
+
+**Bash**
+
+```bash
+cd ~/.dotfiles/dotfiles
+nvim-dev
+```
+
+**Zsh**
+
+```bash
+cd ~/.dotfiles/dotfiles
+nvim-dev
+```
+
+**PowerShell**
+
+```powershell
+cd $env:USERPROFILE\.dotfiles\dotfiles
+$env:XDG_CONFIG_HOME = "$PWD/config"
+$env:XDG_DATA_HOME = "$PWD/.devstate/data"
+$env:XDG_STATE_HOME = "$PWD/.devstate/state"
+$env:XDG_CACHE_HOME = "$PWD/.devstate/cache"
+try { nvim }
+finally {
+  'XDG_CONFIG_HOME','XDG_DATA_HOME','XDG_STATE_HOME','XDG_CACHE_HOME' | ForEach-Object { Remove-Item "Env:$_" -ErrorAction SilentlyContinue }
+}
+```
+
+To pass arguments (e.g., `--clean` for fresh state):
+
+```bash
+nvim-dev --clean
+```
+
+Isolated state directory `.devstate/` is gitignored and can be safely deleted to reset dev state.
+
 ## Project Layout
 
 - [init.lua](init.lua): entrypoint and lazy bootstrap
 - [lua/core](lua/core): base options, keymaps, utilities, autocmds
 - [lua/plugins](lua/plugins): plugin specs and configuration
-- [lazy-lock.json](lazy-lock.json): pinned plugin commits
 
 ## Core Workflows
 

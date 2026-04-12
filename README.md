@@ -12,15 +12,14 @@ This repository uses a normal non-bare git layout plus repo-owned scripts for de
 ├── manifest.yaml
 ```
 
-## First bootstrap on a machine
+## Installation
 
 Linux and WSL:
 
 ```sh
 git clone https://github.com/PhoenixWyllow/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
-bash scripts/bootstrap-git-aliases.sh
-git df-apply
+bash scripts/apply.sh
 ```
 
 Windows-native PowerShell 7:
@@ -28,13 +27,35 @@ Windows-native PowerShell 7:
 ```powershell
 git clone https://github.com/PhoenixWyllow/dotfiles.git $HOME/.dotfiles
 Set-Location $HOME/.dotfiles
-pwsh -NoProfile -File scripts/bootstrap-git-aliases.ps1
+./scripts/apply.ps1
+```
+
+Optional convenience aliases (run once per clone or machine):
+
+```sh
+bash scripts/bootstrap-git-aliases.sh
+git df-apply
+```
+or 
+```powershell
+./scripts/bootstrap-git-aliases.ps1
 git df-apply
 ```
 
-After that, aliases are available and can be refreshed anytime with `git df-bootstrap`.
+After bootstrap, aliases can be refreshed anytime with `git df-bootstrap`.
 
 ## Daily commands
+
+Without bootstrap aliases:
+
+```sh
+bash scripts/doctor.sh
+bash scripts/apply.sh --dry-run
+bash scripts/apply.sh
+bash scripts/capture.sh
+```
+
+With bootstrap aliases:
 
 ```sh
 git df-doctor
