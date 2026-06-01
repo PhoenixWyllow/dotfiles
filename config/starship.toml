@@ -1,5 +1,8 @@
 # ~/.config/starship.toml
 
+# Get editor completions based on the config schema
+"$schema" = 'https://starship.rs/config-schema.json'
+
 add_newline = false
 command_timeout = 1000
 format = """[╭─](descle)\
@@ -29,7 +32,7 @@ error_symbol = ''
 # ---
 
 [os]
-format = '[$symbol ]($style)'   
+format = '[$symbol ]($style)'
 disabled = false
 style = 'bg:rootle fg:rootlet bold'
 

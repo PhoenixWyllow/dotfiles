@@ -1,6 +1,7 @@
 -- LSP Configuration & Plugins
 -- Search for lspconfig to find the configuration.
 local servers = {
+  roslyn = {},
   marksman = {},
   taplo = {},
   lua_ls = {
@@ -36,10 +37,11 @@ local on_attach = function(client, bufnr)
   local ok_telescope, tbi = pcall(require, "telescope.builtin")
   local ok_wk, wk = pcall(require, "which-key")
 
+
   if ok_wk then
     wk.add({
-      { "<leader>rn", vim.lsp.buf.rename,                  desc = lsp('[R]e[n]ame') },
-      { "<leader>ca", vim.lsp.buf.code_action,             desc = lsp('[C]ode [A]ction') },
+      { "<leader>rn", vim.lsp.buf.rename,      desc = lsp('[R]e[n]ame') },
+      { "<leader>ca", vim.lsp.buf.code_action, desc = lsp('[C]ode [A]ction') },
       {
         "<leader>D",
         ok_telescope and tbi.lsp_type_definitions or vim.lsp.buf.type_definition,
@@ -64,12 +66,12 @@ local on_attach = function(client, bufnr)
         end,
         desc = lsp('[W]orkspace [L]ist Folders')
       },
-      { "<leader>gd", ok_telescope and tbi.lsp_definitions or vim.lsp.buf.definition, desc = lsp('[G]oto [D]efinition') },
-      { "<leader>gD", vim.lsp.buf.declaration,                                               desc = lsp('[G]oto [D]eclaration') },
-      { "<leader>gr", ok_telescope and tbi.lsp_references or vim.lsp.buf.references,        desc = lsp('[G]oto [R]eferences') },
+      { "<leader>gd", ok_telescope and tbi.lsp_definitions or vim.lsp.buf.definition,         desc = lsp('[G]oto [D]efinition') },
+      { "<leader>gD", vim.lsp.buf.declaration,                                                desc = lsp('[G]oto [D]eclaration') },
+      { "<leader>gr", ok_telescope and tbi.lsp_references or vim.lsp.buf.references,          desc = lsp('[G]oto [R]eferences') },
       { "<leader>gI", ok_telescope and tbi.lsp_implementations or vim.lsp.buf.implementation, desc = lsp('[G]oto [I]mplementation') },
-      { "<leader>K",  vim.lsp.buf.hover,                  desc = lsp('Hover Documentation') },
-      { "<leader>k>", vim.lsp.buf.signature_help,         desc = lsp('Signature Documentation') },
+      { "<leader>K",  vim.lsp.buf.hover,                                                      desc = lsp('Hover Documentation') },
+      { "<leader>k>", vim.lsp.buf.signature_help,                                             desc = lsp('Signature Documentation') },
     })
   end
 
@@ -95,6 +97,26 @@ local on_attach = function(client, bufnr)
   end
 end
 
+local diagnostic_icons = {
+  [vim.diagnostic.severity.ERROR] = "",
+  [vim.diagnostic.severity.WARN]  = "",
+  [vim.diagnostic.severity.INFO]  = "",
+  [vim.diagnostic.severity.HINT]  = "",
+}
+
+---comment
+---@param diagnostic vim.Diagnostic
+---@param i integer
+---@param total integer
+---@return string
+local function diagnostic_icon(diagnostic, i, total)
+  local icon = (diagnostic_icons[diagnostic.severity] or "●") .. " "
+  if total > 1 then
+    return icon .. "(" .. i .. "/" .. total .. ") "
+  end
+  return icon
+end
+
 return {
   {
     "neovim/nvim-lspconfig",
@@ -117,7 +139,6 @@ return {
             'github:crashdummyy/mason-registry',
           },
         },
-
       },
       {
         "mason-org/mason-lspconfig.nvim",
@@ -126,66 +147,50 @@ return {
           automatic_enable = false,
         }
       },
+      {
+        "seblyng/roslyn.nvim",
+        ---@module 'roslyn.config'
+        ---@type RoslynNvimConfig
+        opts = {
+          --empty for default settings
+        }
+      },
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})` or `config = true`
       { "j-hui/fidget.nvim",    opts = {} },
       { "hrsh7th/cmp-nvim-lsp", opts = {} },
     },
     opts = {
-      -- options for vim.diagnostic.config()
-      diagnostics = {
-        underline = true,
-        update_in_insert = false,
-        virtual_text = {
-          spacing = 2,
-          source = "if_many",
-          -- prefix = "●",
-          -- this will set set the prefix to a function that returns the diagnostics icon based on the severity
-          -- this only works on a recent 0.10.0 build. Will be set to "●" when not supported
-          prefix = "icons",
-        },
-        severity_sort = true,
-      },
       -- Enable this to enable the builtin LSP inlay hints on Neovim >= 0.10.0
       -- Be aware that you also will need to properly configure your LSP server to
       -- provide the inlay hints.
       inlay_hints = {
         enabled = false,
-
       },
     },
     config = function(_, opts)
-      vim.diagnostic.config(opts.diagnostics)
+      vim.diagnostic.config({
+        underline = true,
+        update_in_insert = true,
+        signs = {
+          text = diagnostic_icons,
+        },
+        virtual_text = {
+          spacing = 2,
+          source = "if_many",
+          prefix = "●",
+          -- prefix = diagnostic_icon
+        },
+        severity_sort = true,
+      })
 
       -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
       for server_name, server in pairs(servers) do
-        -- Load the default lspconfig defaults if available
-        local config = {}
-        
-        -- Try different module paths for server configs
-        local found = false
-        for _, path_template in ipairs({
-          "lspconfig.lsp.%s",
-          "lspconfig.server_configurations.%s",
-        }) do
-          local ok, loaded_config = pcall(require, path_template:format(server_name))
-          if ok then
-            config = loaded_config
-            found = true
-            break
-          end
-        end
-        
-        if not found then
-          -- If no default config, use a minimal config with just the name
-          config = { name = server_name }
-        end
-
         -- Merge our overrides (capabilities, on_attach, custom settings)
-        config = vim.tbl_deep_extend("force", config, {
+        local config = vim.tbl_deep_extend("force", {
           name = server_name,
           capabilities = capabilities,
           on_attach = on_attach,
@@ -199,6 +204,6 @@ return {
       if vim.v.vim_did_enter == 1 then
         vim.cmd("doautoall nvim.lsp.enable FileType")
       end
-    end
+    end,
   },
 }
