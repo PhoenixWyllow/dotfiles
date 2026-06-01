@@ -1,7 +1,12 @@
 -- LSP Configuration & Plugins
 -- Search for lspconfig to find the configuration.
 local servers = {
-  roslyn = {},
+  roslyn_ls = {},
+  ruff = {},
+  cssls = {},
+  html = {},
+  ts_ls = {},
+  angularls = {},
   marksman = {},
   taplo = {},
   lua_ls = {
@@ -42,6 +47,7 @@ local on_attach = function(client, bufnr)
     wk.add({
       { "<leader>rn", vim.lsp.buf.rename,      desc = lsp('[R]e[n]ame') },
       { "<leader>ca", vim.lsp.buf.code_action, desc = lsp('[C]ode [A]ction') },
+      { "<leader>cf", vim.lsp.buf.format(),    desc = lsp('[C]ode [F]ormat') },
       {
         "<leader>D",
         ok_telescope and tbi.lsp_type_definitions or vim.lsp.buf.type_definition,
@@ -110,7 +116,7 @@ local diagnostic_icons = {
 ---@param total integer
 ---@return string
 local function diagnostic_icon(diagnostic, i, total)
-  local icon = (diagnostic_icons[diagnostic.severity] or "●") .. " "
+  local icon = (diagnostic_icons[diagnostic.severity] or "●")
   if total > 1 then
     return icon .. "(" .. i .. "/" .. total .. ") "
   end
@@ -119,11 +125,19 @@ end
 
 return {
   {
+    "seblyng/roslyn.nvim",
+    ---@module 'roslyn.config'
+    ---@type RoslynNvimConfig
+    opts = {
+      --empty for default settings
+    }
+  },
+  {
     "neovim/nvim-lspconfig",
     event = { "VeryLazy" },
     cmd = { "LspInfo", "LspInstall", "LspUninstall", "Mason" },
     dependencies = {
-      -- Automatically install LSPs to stdpath for neovim
+      "seblyng/roslyn.nvim", -- Automatically install LSPs to stdpath for neovim
       {
         "mason-org/mason.nvim",
         opts = {
@@ -145,14 +159,6 @@ return {
         opts = {
           ensure_installed = vim.tbl_keys(servers),
           automatic_enable = false,
-        }
-      },
-      {
-        "seblyng/roslyn.nvim",
-        ---@module 'roslyn.config'
-        ---@type RoslynNvimConfig
-        opts = {
-          --empty for default settings
         }
       },
       -- Useful status updates for LSP
@@ -178,8 +184,8 @@ return {
         virtual_text = {
           spacing = 2,
           source = "if_many",
-          prefix = "●",
-          -- prefix = diagnostic_icon
+          -- prefix = "●",
+          prefix = diagnostic_icon
         },
         severity_sort = true,
       })
