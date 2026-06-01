@@ -33,11 +33,11 @@ Optional convenience aliases (run once per clone or machine):
 
 - Linux and WSL:
   ```sh
-  bash scripts/bootstrap-aliases.sh
+  bash scripts/bootstrap-git-aliases.sh
   ```
 - Windows-native PowerShell 7:
   ```powershell
-  ./scripts/bootstrap-aliases.ps1
+  ./scripts/bootstrap-git-aliases.ps1
   ```
 
 This adds `git df-*` aliases for the daily commands below.

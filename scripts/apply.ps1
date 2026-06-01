@@ -32,6 +32,15 @@ $ErrorActionPreference = 'Stop'
 
 . "$PSScriptRoot/lib.ps1"
 
+function Invoke-Step {
+    param([string]$Description)
+    if ($script:dryRun) {
+        Write-Host "[DRY-RUN] $Description"
+        return $false
+    }
+    return $true
+}
+
 $dryRun = $false
 
 function Show-Usage {
@@ -73,24 +82,44 @@ foreach ($record in Get-ManifestRecords) {
         continue
     }
 
-    if ($dryRun) {
-        Write-Host "[DRY-RUN] copy ($($record.Type)) $srcPath -> $dstPath"
-        $applied++
-        continue
-    }
-
     switch ($record.Type) {
         'file' {
-            $parent = Split-Path -Parent $dstPath
-            if ($parent) {
-                New-Item -ItemType Directory -Force -Path $parent | Out-Null
+            if (Invoke-Step "copy (file) $srcPath -> $dstPath") {
+                $parent = Split-Path -Parent $dstPath
+                if ($parent) {
+                    New-Item -ItemType Directory -Force -Path $parent | Out-Null
+                }
+                Copy-Item -LiteralPath $srcPath -Destination $dstPath -Force
             }
-            Copy-Item -LiteralPath $srcPath -Destination $dstPath -Force
         }
         'dir' {
-            New-Item -ItemType Directory -Force -Path $dstPath | Out-Null
-            Get-ChildItem -LiteralPath $srcPath -Force | ForEach-Object {
-                Copy-Item -LiteralPath $_.FullName -Destination $dstPath -Recurse -Force
+            if (Test-Path -LiteralPath $dstPath) {
+                Get-ChildItem -LiteralPath $dstPath -Recurse -File | ForEach-Object {
+                    $rel = $_.FullName.Substring($dstPath.Length).TrimStart([IO.Path]::DirectorySeparatorChar)
+                    if (-not (Test-Path -LiteralPath (Join-Path $srcPath $rel))) {
+                        $itemPath = $_.FullName
+                        if (Invoke-Step "delete $itemPath") {
+                            Remove-Item -LiteralPath $itemPath -Force
+                        }
+                    }
+                }
+                Get-ChildItem -LiteralPath $dstPath -Recurse -Directory |
+                    Sort-Object { $_.FullName.Length } -Descending |
+                    ForEach-Object {
+                        $rel = $_.FullName.Substring($dstPath.Length).TrimStart([IO.Path]::DirectorySeparatorChar)
+                        if (-not (Test-Path -LiteralPath (Join-Path $srcPath $rel))) {
+                            $itemPath = $_.FullName
+                            if (Invoke-Step "delete $itemPath") {
+                                Remove-Item -LiteralPath $itemPath -Force -Recurse
+                            }
+                        }
+                    }
+            }
+            if (Invoke-Step "copy (dir) $srcPath -> $dstPath") {
+                New-Item -ItemType Directory -Force -Path $dstPath | Out-Null
+                Get-ChildItem -LiteralPath $srcPath -Force | ForEach-Object {
+                    Copy-Item -LiteralPath $_.FullName -Destination $dstPath -Recurse -Force
+                }
             }
         }
         default {
@@ -99,7 +128,9 @@ foreach ($record in Get-ManifestRecords) {
         }
     }
 
-    Write-Host "Applied ($($record.Type)): $($record.Source) -> $($record.Target)"
+    if (-not $script:dryRun) {
+        Write-Host "Applied ($($record.Type)): $($record.Source) -> $($record.Target)"
+    }
     $applied++
 }
 

@@ -68,6 +68,26 @@ if [[ "$current_platform" == "unknown" ]]; then
   exit 1
 fi
 
+# Executes a command or previews it depending on DRY_RUN.
+do_step() {
+  local desc="$1"; shift
+  if [[ "$DRY_RUN" == true ]]; then
+    echo "[DRY-RUN] $desc"
+  else
+    "$@"
+  fi
+}
+
+copy_file_to() {
+  mkdir -p "$(dirname "$2")"
+  cp -f "$1" "$2"
+}
+
+sync_dir_to() {
+  mkdir -p "$2"
+  cp -a "$1/." "$2/"
+}
+
 applied=0
 
 while IFS=$'\t' read -r source target platforms type mode; do
@@ -88,22 +108,23 @@ while IFS=$'\t' read -r source target platforms type mode; do
     continue
   fi
 
-  # Dry-run prints exactly what would happen, without touching target files.
-  if [[ "$DRY_RUN" == true ]]; then
-    echo "[DRY-RUN] copy ($type) $src_path -> $dst_path"
-    applied=$((applied + 1))
-    continue
-  fi
-
-  # File entries replace one file; dir entries merge directory contents.
+  # File entries replace one file; dir entries sync directory contents.
   case "$type" in
     file)
-      mkdir -p "$(dirname "$dst_path")"
-      cp -f "$src_path" "$dst_path"
+      do_step "copy (file) $src_path -> $dst_path" copy_file_to "$src_path" "$dst_path"
       ;;
     dir)
-      mkdir -p "$dst_path"
-      cp -a "$src_path/." "$dst_path/"
+      if [[ -d "$dst_path" ]]; then
+        while IFS= read -r -d '' dst_file; do
+          rel="${dst_file#${dst_path}/}"
+          [[ -e "$src_path/$rel" ]] || do_step "delete $dst_file" rm -f "$dst_file"
+        done < <(find "$dst_path" -mindepth 1 -type f -print0)
+        while IFS= read -r -d '' dst_dir; do
+          rel="${dst_dir#${dst_path}/}"
+          [[ -e "$src_path/$rel" ]] || do_step "delete $dst_dir" rm -rf "$dst_dir"
+        done < <(find "$dst_path" -mindepth 1 -type d -print0 | sort -rz)
+      fi
+      do_step "copy (dir) $src_path -> $dst_path" sync_dir_to "$src_path" "$dst_path"
       ;;
     *)
       echo "Skipping $source because type '$type' is unsupported."
@@ -111,7 +132,7 @@ while IFS=$'\t' read -r source target platforms type mode; do
       ;;
   esac
 
-  echo "Applied ($type): $source -> $target"
+  [[ "$DRY_RUN" != true ]] && echo "Applied ($type): $source -> $target"
   applied=$((applied + 1))
 done < <(manifest_records)
 
